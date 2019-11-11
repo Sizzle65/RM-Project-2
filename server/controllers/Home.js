@@ -1,7 +1,7 @@
 const models = require('../models');
 const Dota = models.Dota;
 
-const homePage = (req, res) => {
+const homePage = (req, res) =>
 //   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
 //     if (err) {
 //       console.log(err);
@@ -10,8 +10,7 @@ const homePage = (req, res) => {
 
 //     return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
 //   });
-    return res.render('app', { csrfToken: req.csrfToken() });
-};
+     res.render('app', { csrfToken: req.csrfToken() });
 
 const getHeroes = (request, response) => {
   const req = request;

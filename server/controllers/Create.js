@@ -1,7 +1,7 @@
 const models = require('../models');
 const Dota = models.Dota;
 
-const createPage = (req, res) => {
+const createPage = (req, res) =>
 //   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
 //     if (err) {
 //       console.log(err);
@@ -10,8 +10,7 @@ const createPage = (req, res) => {
 
 //     return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
 //   });
-    return res.render('create', { csrfToken: req.csrfToken() });
-};
+     res.render('create', { csrfToken: req.csrfToken() });
 
 const createDotaCharacter = (req, res) => {
   // if (!req.body.name || !req.body.primaryAttribute || !req.body.level) {

@@ -127,7 +127,9 @@ DotaSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return DotaModel.find(search).select('name primaryAttribute strength agility intelligence moveSpeed armor basicName1 basicDesc1 basicName2 basicDesc2 basicName3 basicDesc3 ultimateName ultimateDesc').exec(callback);
+  return DotaModel.find(search).select('name primaryAttribute strength agility ' +
+   'intelligence moveSpeed armor basicName1 basicDesc1 basicName2 basicDesc2 ' +
+   'basicName3 basicDesc3 ultimateName ultimateDesc').exec(callback);
 };
 
 DotaModel = mongoose.model('Dota', DotaSchema);
