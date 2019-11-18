@@ -8,11 +8,20 @@ const router = (app) => {
   app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
   app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
+  app.get('/account', mid.requiresLogin, controllers.Account.accountInfo);
+  app.patch('/changePass', mid.requiresLogin, controllers.Account.changePass);
   app.get('/home', mid.requiresLogin, controllers.Home.homePage);
   app.get('/getHeroes', mid.requiresLogin, controllers.Home.getHeroes);
   app.get('/create', mid.requiresLogin, controllers.Create.createPage);
   app.post('/createDotaCharacter', mid.requiresLogin, controllers.Create.createDotaCharacter);
+  app.get('/browse', mid.requiresLogin, controllers.Browse.browsePage);
+  app.get('/getAccounts', mid.requiresLogin, controllers.Browse.getAccounts);
+  app.get('/getAccount', mid.requiresLogin, controllers.Browse.getAccount);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  // Redirects on a 404
+  app.get('*', (req, res) => {
+    res.redirect('/');
+  });
 };
 
 module.exports = router;

@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>MOBA Character Creator</title>
+  <title>Dota 2 Hero Workshop</title>
   <script crossorigin src="https://unpkg.com/react@15/dist/react.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
   <script crossorigin src="https://unpkg.com/prop-types/prop-types.min.js"></script>
@@ -14,14 +14,13 @@
 <body>
   <nav><a href="/login"><img id="logo" src="/assets/img/game.png" alt="game logo"/></a>
     <div class="navlink"><a href="/logout">Log out</a></div>
-    <div class="navlink"><a href="/create">Create Characters</a></div>
+    <div class="navlink"><a href="/home">Barracks</a></div>
+    <div class="navlink"><a href="/create">Forge</a></div>
+    <div class="navlink"><a href="/browse">Community</a></div>
+    <div class="navlink"><a href="/account">Account</a></div>
   </nav>
-  <img id="dotaLogo" src="/assets/img/dota.png" alt="dota logo"/>
+  <div class="pageTitle">Your Heroes</div>
   <section id="dotaCharacters"></section>
-  <img id="leagueLogo" src="/assets/img/league.png" alt="league logo"/>
-  <section id="leagueCharacters">Not Implemented Yet!</section>
-  <img id="smiteLogo" src="/assets/img/smite.png" alt="smite logo"/>
-  <section id="smiteCharacters">Not Implemented Yet!</section>
   <script src="/assets/homeBundle.js"></script>
 </body>
 </html>

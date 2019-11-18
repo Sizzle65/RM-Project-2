@@ -1,3 +1,4 @@
+// Ensures session is active
 const requiresLogin = (req, res, next) => {
   if (!req.session.account) {
     return res.redirect('/');
@@ -5,6 +6,7 @@ const requiresLogin = (req, res, next) => {
   return next();
 };
 
+// Ensures session is inactive
 const requiresLogout = (req, res, next) => {
   if (req.session.account) {
     return res.redirect('/home');
@@ -13,6 +15,7 @@ const requiresLogout = (req, res, next) => {
   return next();
 };
 
+// Ensure connection is mildly secure
 const requiresSecure = (req, res, next) => {
   if (req.headers['x-forward-proto'] !== 'https') {
     return res.redirect(`https//${req.hostname}${req.url}`);
@@ -20,6 +23,7 @@ const requiresSecure = (req, res, next) => {
   return next();
 };
 
+// Allows for bypassing of security
 const bypassSecure = (req, res, next) => {
   next();
 };

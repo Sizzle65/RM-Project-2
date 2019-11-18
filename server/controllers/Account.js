@@ -2,15 +2,23 @@ const models = require('../models');
 
 const Account = models.Account;
 
+// Directs to login page
 const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
+// Directs to login page after logging out, ends current session
 const logout = (req, res) => {
   req.session.destroy();
   res.render('login');
 };
 
+// Directs to account information page
+const accountInfo = (req, res) => {
+  res.render('account');
+};
+
+// Handles login
 const login = (request, response) => {
   const req = request;
   const res = response;
@@ -32,6 +40,7 @@ const login = (request, response) => {
   });
 };
 
+// Handles signup
 const signup = (request, response) => {
   const req = request;
   const res = response;
@@ -76,6 +85,57 @@ const signup = (request, response) => {
   });
 };
 
+const changePass = (request, response) => {
+  const req = request;
+  const res = response;
+
+  console.dir(request.body);
+
+  if (!req.body.pass || !req.body.pass2) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  if (req.body.pass !== req.body.pass2) {
+    return res.status(400).json({ error: 'Passwords do not match' });
+  }
+
+  return Account.AccountModel.authenticate(req.session.account.username, req.body.pass,
+    (err, account) => {
+      if (err) {
+        return res.status(401).json({ error: 'An error occurred' });
+      }
+      if (account) {
+        return res.status(401).json({ error: 'Input password equals old password' });
+      }
+
+      return Account.AccountSchema.statics.generateHash(req.body.pass, (salt, hash) =>
+       Account.AccountModel.findOne({ _id: req.session.account._id }, (er, acc) => {
+         if (er) {
+           console.log(er);
+           return res.status(400).json({ error: 'An error occurred' });
+         }
+         const accVar = acc;
+         accVar.salt = salt;
+         accVar.password = hash;
+
+         const promise = accVar.save();
+
+         promise.then(() => {
+           req.session.account = Account.AccountModel.toAPI(accVar);
+           return res.json({ account: accVar });
+         });
+
+         promise.catch((e) => {
+           console.log(e);
+
+           return res.status(400).json({ error: 'An error ocurred' });
+         });
+         return res.status(200).json({ message: 'Success' });
+       }));
+    });
+};
+
+// Gets the csrf token
 const getToken = (request, response) => {
   const req = request;
   const res = response;
@@ -91,4 +151,6 @@ module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
+module.exports.accountInfo = accountInfo;
+module.exports.changePass = changePass;
 module.exports.getToken = getToken;

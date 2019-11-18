@@ -7,6 +7,7 @@ let DotaModel = {};
 const convertId = mongoose.Types.ObjectId;
 const trimString = (name) => _.escape(name).trim();
 
+// Schema which includes all necessary information for the creation of a new hero
 const DotaSchema = new mongoose.Schema({
   name: {
     type: String,

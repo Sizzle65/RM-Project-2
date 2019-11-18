@@ -217,9 +217,9 @@ nav:nth-child(1) {
 #logoDisplay #dotaLogo {
     display:inline-block;
 }
-#logoDisplay #leagueLogo {
-    display:inline-block;
-}
-#logoDisplay #smiteLogo {
-    display:inline-block;
+
+.pageHeader {
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
 }

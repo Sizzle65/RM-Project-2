@@ -1,3 +1,4 @@
+// Updates the error message div
 const handleError = (message) => {
     $("#errorMessage").text(message);
 };
@@ -6,6 +7,7 @@ const redirect = (response) => {
     window.location = response.redirect;
 };
 
+// Sends requests to the server
 const sendAjax = (type, action, data, success) => {
     $.ajax({
         cache: false,

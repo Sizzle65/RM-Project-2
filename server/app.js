@@ -11,9 +11,10 @@ const RedisStore = require('connect-redis')(session);
 const url = require('url');
 const csrf = require('csurf');
 
+// Sets up the port and mongo conection
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/DomoMaker';
+const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/Project2';
 
 mongoose.connect(dbURL, (err) => {
   if (err) {
@@ -22,6 +23,7 @@ mongoose.connect(dbURL, (err) => {
   }
 });
 
+// Sets up Redis connection
 let redisURL = {
   hostname: 'redis-10537.c92.us-east-1-3.ec2.cloud.redislabs.com',
   port: 10537,

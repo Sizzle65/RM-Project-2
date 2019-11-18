@@ -1,3 +1,4 @@
+// Validates login
 const handleLogin = (e) => {
     e.preventDefault();
 
@@ -8,11 +9,13 @@ const handleLogin = (e) => {
 
     console.log($("input[name=_csrf]").val());
 
+    // Sends login request to the server
     sendAjax('POST', $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
 
     return false;
 };
 
+// Validates signup
 const handleSignup = (e) => {
     e.preventDefault();
 
@@ -26,11 +29,13 @@ const handleSignup = (e) => {
         return false;
     }
 
+    // Sends signup request to the server
     sendAjax('POST', $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
 
     return false;
 };
 
+// Sets up the login form
 const LoginWindow = (props) => {
     return (
         <form id="loginForm" name="loginForm"
@@ -44,12 +49,14 @@ const LoginWindow = (props) => {
             <label htmlFor="pass">Password: </label>
             <input id="pass" type="password" name="pass" placeholder="password"/>    
             <input type="hidden" name="_csrf" value={props.csrf}/>   
+            <div id="errorMessage"></div>
             <input className="formSubmit" type="submit" value="Sign In"/>
 
         </form>
     );
 };
 
+// Sets up the signup form
 const SignupWindow = (props) => {
     return (
         <form id="signupForm" name="signupForm"
@@ -65,12 +72,14 @@ const SignupWindow = (props) => {
             <label htmlFor="pass2">Password: </label>
             <input id="pass2" type="password" name="pass2" placeholder="retype password"/>     
             <input type="hidden" name="_csrf" value={props.csrf}/>   
+            <div id="errorMessage"></div>
             <input className="formSubmit" type="submit" value="Sign Up"/>
 
         </form>
     );
 };
 
+// Creates the forms
 const createLoginWindow = (csrf) => {
     ReactDOM.render(
         <LoginWindow csrf={csrf} />,
@@ -85,6 +94,7 @@ const createSignupWindow = (csrf) => {
     );
 };
 
+// Handles switch between signup and login windows
 const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");

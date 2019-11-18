@@ -1,4 +1,17 @@
-// Sets up the list of heroes and how they will be displayed
+// Grabs all the heroes for the selected account from the server 
+const handleCharacters = (e) => {
+    e.preventDefault();
+    sendAjax('GET', '/getAccount', { id: e.target.id.value}, (data) => {
+        $("#selectedAccount").text(data.account.username + "'s Heroes"); 
+
+        // Adds the queried heroes to the screen
+        ReactDOM.render(
+            <DotaList heroes={data.heroes} />, document.querySelector("#dotaCharacters")
+        );
+    });
+};
+
+// Sets up the format for the displaying of heroes
 const DotaList = (props) => {
     if(props.heroes.length === 0) {
         return(
@@ -52,17 +65,52 @@ const DotaList = (props) => {
     );
 };
 
-// Grabs all the heroes from the server that are tied to the currect account
-const loadHeroesFromServer = () => {
-    sendAjax('GET', '/getHeroes', null, (data) => {
+// Sets up the format for the displaying of accounts
+const AccountList = (props) => {
+    if(props.accounts.length === 0) {
+        return(
+            <div className="accountList">
+                <h3 className="emptyAccounts">No Accounts yet</h3>
+            </div>
+        );
+    }
+
+    const accountNodes = props.accounts.map(function(account) {
+        let action = '/getAccount?' + account._id;
+        return (
+            <div key={account._id} className="accountCard">
+                <form id="accountForm" 
+                    name="accountForm"
+                    onSubmit={handleCharacters}
+                    action={action}
+                    method="GET"
+                    className="accountForm">
+                <input type="hidden" name="_csrf" value={props.csrf} />   
+                <input type="hidden" name="id" value={account._id} />   
+                <input type="submit" value={account.username} id="submitAccount"/>         
+                </form>
+            </div>
+        );
+    });
+
+    return (
+        <div className="accountList">
+            {accountNodes}
+        </div>
+    );
+};
+
+// Grabs all accounts from the server, except the one currently logged on
+const loadAccountsFromServer = (csrf) => {
+    sendAjax('GET', '/getAccounts', null, (data) => {
         ReactDOM.render(
-            <DotaList heroes={data.heroes} />, document.querySelector("#dotaCharacters")
+            <AccountList accounts={data.accounts} csrf={csrf} />, document.querySelector("#accounts")
         );
     });
 };
 
 const setup = function(csrf) {
-    loadHeroesFromServer();
+    loadAccountsFromServer(csrf);
 }
 
 const getToken = () => {

@@ -1,5 +1,6 @@
 "use strict";
 
+// Sets up the list of heroes and how they will be displayed
 var DotaList = function DotaList(props) {
     if (props.heroes.length === 0) {
         return React.createElement(
@@ -16,7 +17,7 @@ var DotaList = function DotaList(props) {
     var heroNodes = props.heroes.map(function (hero) {
         return React.createElement(
             "div",
-            { key: hero._id, className: "heroCard" },
+            { key: hero._id, className: "heroCard", target: hero.primaryAttribute },
             React.createElement(
                 "h2",
                 { className: "name" },
@@ -165,6 +166,7 @@ var DotaList = function DotaList(props) {
     );
 };
 
+// Grabs all the heroes from the server that are tied to the currect account
 var loadHeroesFromServer = function loadHeroesFromServer() {
     sendAjax('GET', '/getHeroes', null, function (data) {
         ReactDOM.render(React.createElement(DotaList, { heroes: data.heroes }), document.querySelector("#dotaCharacters"));
@@ -172,10 +174,6 @@ var loadHeroesFromServer = function loadHeroesFromServer() {
 };
 
 var setup = function setup(csrf) {
-    // ReactDOM.render(
-    //     <DotaList heroes={[]} />, document.querySelector("#dotaCharacters")
-    // );
-
     loadHeroesFromServer();
 };
 
@@ -190,6 +188,7 @@ $(document).ready(function () {
 });
 "use strict";
 
+// Updates the error message div
 var handleError = function handleError(message) {
     $("#errorMessage").text(message);
 };
@@ -198,6 +197,7 @@ var redirect = function redirect(response) {
     window.location = response.redirect;
 };
 
+// Sends requests to the server
 var sendAjax = function sendAjax(type, action, data, success) {
     $.ajax({
         cache: false,

@@ -1,22 +1,12 @@
 const models = require('../models');
 const Dota = models.Dota;
 
+// Directs to the hero creation page
 const createPage = (req, res) =>
-//   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
-//     if (err) {
-//       console.log(err);
-//       return res.status(400).json({ error: 'An error occurred' });
-//     }
-
-//     return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
-//   });
      res.render('create', { csrfToken: req.csrfToken() });
 
+// Handles creation of a new hero
 const createDotaCharacter = (req, res) => {
-  // if (!req.body.name || !req.body.primaryAttribute || !req.body.level) {
-  //   return res.status(400).json({ error: 'RAWR! Both name, age and level are required' });
-  // }
-
   const dotaData = {
     name: req.body.name,
     primaryAttribute: req.body.primAtt,
