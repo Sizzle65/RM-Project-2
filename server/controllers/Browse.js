@@ -45,14 +45,16 @@ const getTop = (request, response) => {
   const req = request;
   const res = response;
 
+  console.log(req);
+
   return Dota.DotaModel.find({}, (er, hrs) => {
     if (er) {
       console.log(er);
       return res.status(400).json({ error: 'An error occurred' });
     }
-    hrs.sort((a, b) => (a.rating < b.rating) ? 1 : -1);
+    hrs.sort((a, b) => ((a.rating < b.rating) ? 1 : -1));
 
-    if (hrs.length > 5){
+    if (hrs.length > 5) {
       hrs.splice(5, hrs.length - 1);
     }
 

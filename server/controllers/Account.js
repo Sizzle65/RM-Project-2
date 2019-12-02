@@ -150,16 +150,27 @@ const upvote = (request, response) => {
     }
 
     console.log(acc);
-    
+
     return res.status(200).json({ message: 'Success' });
   });
-
 };
 
 const downvote = (request, response) => {
   const req = request;
   const res = response;
 
+  console.log(req.account);
+
+  Account.AccountModel.findOne({ username: req.account }, (er, acc) => {
+    if (er) {
+      console.log(er);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+
+    console.log(acc);
+
+    return res.status(200).json({ message: 'Success' });
+  });
 };
 
 // Gets the csrf token

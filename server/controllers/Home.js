@@ -29,7 +29,7 @@ const deleteHero = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
     }
-    console.log("here");
+    console.log('here');
     return res.json({ heroes: docs });
   });
 };
