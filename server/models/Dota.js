@@ -14,6 +14,7 @@ const DotaSchema = new mongoose.Schema({
     required: true,
     trim: true,
     set: trimString,
+    maxlength: 18,
   },
   primaryAttribute: {
     type: String,
@@ -94,6 +95,11 @@ const DotaSchema = new mongoose.Schema({
     trim: true,
     set: trimString,
   },
+  rating: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
@@ -121,6 +127,7 @@ DotaSchema.statics.toAPI = (doc) => ({
   basicDesc3: doc.basicDesc3,
   ultimateName: doc.ultimateName,
   ultimateDesc: doc.ultimateDesc,
+  rating: doc.rating,
 });
 
 DotaSchema.statics.findByOwner = (ownerId, callback) => {
@@ -130,7 +137,7 @@ DotaSchema.statics.findByOwner = (ownerId, callback) => {
 
   return DotaModel.find(search).select('name primaryAttribute strength agility ' +
    'intelligence moveSpeed armor basicName1 basicDesc1 basicName2 basicDesc2 ' +
-   'basicName3 basicDesc3 ultimateName ultimateDesc').exec(callback);
+   'basicName3 basicDesc3 ultimateName ultimateDesc rating').exec(callback);
 };
 
 DotaModel = mongoose.model('Dota', DotaSchema);

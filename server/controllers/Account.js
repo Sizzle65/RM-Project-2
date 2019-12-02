@@ -85,12 +85,12 @@ const signup = (request, response) => {
   });
 };
 
+// Handles password change for the active account
 const changePass = (request, response) => {
   const req = request;
   const res = response;
 
-  console.dir(request.body);
-
+  // Checks for proper input, errors if not
   if (!req.body.pass || !req.body.pass2) {
     return res.status(400).json({ error: 'All fields are required' });
   }
@@ -99,6 +99,7 @@ const changePass = (request, response) => {
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
+  // Authenticates the input password to ensure it isn't a match
   return Account.AccountModel.authenticate(req.session.account.username, req.body.pass,
     (err, account) => {
       if (err) {
@@ -108,6 +109,7 @@ const changePass = (request, response) => {
         return res.status(401).json({ error: 'Input password equals old password' });
       }
 
+      // Generates a new hash for the new password
       return Account.AccountSchema.statics.generateHash(req.body.pass, (salt, hash) =>
        Account.AccountModel.findOne({ _id: req.session.account._id }, (er, acc) => {
          if (er) {
@@ -118,6 +120,7 @@ const changePass = (request, response) => {
          accVar.salt = salt;
          accVar.password = hash;
 
+         // Saves the new account information
          const promise = accVar.save();
 
          promise.then(() => {
@@ -133,6 +136,30 @@ const changePass = (request, response) => {
          return res.status(200).json({ message: 'Success' });
        }));
     });
+};
+
+const upvote = (request, response) => {
+  const req = request;
+  const res = response;
+
+  console.log(req.account);
+  Account.AccountModel.findOne({ username: req.account }, (er, acc) => {
+    if (er) {
+      console.log(er);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+
+    console.log(acc);
+    
+    return res.status(200).json({ message: 'Success' });
+  });
+
+};
+
+const downvote = (request, response) => {
+  const req = request;
+  const res = response;
+
 };
 
 // Gets the csrf token
@@ -153,4 +180,6 @@ module.exports.logout = logout;
 module.exports.signup = signup;
 module.exports.accountInfo = accountInfo;
 module.exports.changePass = changePass;
+module.exports.upvote = upvote;
+module.exports.downvote = downvote;
 module.exports.getToken = getToken;

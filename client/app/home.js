@@ -1,3 +1,15 @@
+const handleDelete = (e) => {
+    e.preventDefault();
+
+    sendAjax('DELETE', '/deleteHero', { id : e.target.heroId.value } , (data) => {
+        sendAjax('GET', '/getToken', null, (result) => {
+            ReactDOM.render(
+                <DotaList heroes={data.heroes} csrf={result.csrfToken} />, document.querySelector("#dotaCharacters")
+            );
+        });
+    });
+}
+
 // Sets up the list of heroes and how they will be displayed
 const DotaList = (props) => {
     if(props.heroes.length === 0) {
@@ -10,35 +22,47 @@ const DotaList = (props) => {
 
     const heroNodes = props.heroes.map(function(hero) {
         return (
-            <div key={hero._id} className="heroCard" target={hero.primaryAttribute}>
-                <h2 className="name"> {hero.name} </h2>
-                <div className="stats">
-                    <h3 className="primAtt"> {hero.primaryAttribute} </h3>
-                    <h3 className="stat"> <img className="statIcon" src="/assets/img/str.png" alt="str icon"/> {hero.strength} </h3>
-                    <h3 className="stat"> <img className="statIcon" src="/assets/img/agi.png" alt="agi icon"/> {hero.agility} </h3>
-                    <h3 className="stat"> <img className="statIcon" src="/assets/img/int.png" alt="int icon"/> {hero.intelligence} </h3>
-                    <h3 className="stat"> <img className="statIcon" src="/assets/img/boot.png" alt="boot icon"/> {hero.moveSpeed} </h3>
-                    <h3 className="stat"> <img className="statIcon" src="/assets/img/shield.png" alt="shield icon"/> {hero.intelligence} </h3>
-                </div>
-                <div className="abilities">
-                    <div className="spell">
-                        <h3 className="spellName"> {hero.basicName1} </h3>
-                        <h3 className="spellDesc"> {hero.basicDesc1} </h3>
+            <div className="card">
+                <form className="deleteForm" 
+                    id="deleteForm" 
+                    name="deleteForm"
+                    onSubmit={handleDelete}
+                    action="/deleteHero"
+                    method="DELETE">
+                    <input type="hidden" name="_csrf" value={props.csrf}/>   
+                    <input type="hidden" name="heroId" value={hero._id} /> 
+                    <input type="image" src="/assets/img/delete.png" name="upvote" className="delete" target={hero.primaryAttribute} title="Delete Character" />
+                </form>
+                <div key={hero._id} className="dotaCard" target={hero.primaryAttribute}>
+                    <h2 className="name"> {hero.name} </h2>
+                    <div className="stats">
+                        <h3 className="primAtt"> {hero.primaryAttribute} </h3>
+                        <h3 className="stat"> <img className="statIcon" src="/assets/img/str.png" alt="str icon"/> {hero.strength} </h3>
+                        <h3 className="stat"> <img className="statIcon" src="/assets/img/agi.png" alt="agi icon"/> {hero.agility} </h3>
+                        <h3 className="stat"> <img className="statIcon" src="/assets/img/int.png" alt="int icon"/> {hero.intelligence} </h3>
+                        <h3 className="stat"> <img className="statIcon" src="/assets/img/boot.png" alt="boot icon"/> {hero.moveSpeed} </h3>
+                        <h3 className="stat"> <img className="statIcon" src="/assets/img/shield.png" alt="shield icon"/> {hero.intelligence} </h3>
                     </div>
-                    
-                    <div className="spell">
-                        <h3 className="spellName"> {hero.basicName2} </h3>
-                        <h3 className="spellDesc"> {hero.basicDesc2} </h3>
-                    </div>
+                    <div className="abilities">
+                        <div className="spell">
+                            <h3 className="spellName"> {hero.basicName1} </h3>
+                            <h3 className="spellDesc"> {hero.basicDesc1} </h3>
+                        </div>
+                        
+                        <div className="spell">
+                            <h3 className="spellName"> {hero.basicName2} </h3>
+                            <h3 className="spellDesc"> {hero.basicDesc2} </h3>
+                        </div>
 
-                    <div className="spell">
-                        <h3 className="spellName">{hero.basicName3} </h3>
-                        <h3 className="spellDesc"> {hero.basicDesc3} </h3>
-                    </div>
+                        <div className="spell">
+                            <h3 className="spellName">{hero.basicName3} </h3>
+                            <h3 className="spellDesc"> {hero.basicDesc3} </h3>
+                        </div>
 
-                    <div className="spell">
-                        <h3 className="spellName"> {hero.ultimateName} </h3>
-                        <h3 className="spellDesc"> {hero.ultimateDesc} </h3>
+                        <div className="spell">
+                            <h3 className="spellName"> {hero.ultimateName} </h3>
+                            <h3 className="spellDesc"> {hero.ultimateDesc} </h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -53,16 +77,16 @@ const DotaList = (props) => {
 };
 
 // Grabs all the heroes from the server that are tied to the currect account
-const loadHeroesFromServer = () => {
+const loadHeroesFromServer = (csrf) => {
     sendAjax('GET', '/getHeroes', null, (data) => {
         ReactDOM.render(
-            <DotaList heroes={data.heroes} />, document.querySelector("#dotaCharacters")
+            <DotaList heroes={data.heroes} csrf={csrf} />, document.querySelector("#dotaCharacters")
         );
     });
 };
 
 const setup = function(csrf) {
-    loadHeroesFromServer();
+    loadHeroesFromServer(csrf);
 }
 
 const getToken = () => {

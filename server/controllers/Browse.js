@@ -15,7 +15,6 @@ const getAccounts = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
     }
-    console.dir(accs);
     return res.json({ accounts: accs });
   });
 };
@@ -42,6 +41,26 @@ const getAccount = (request, response) => {
   });
 };
 
+const getTop = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Dota.DotaModel.find({}, (er, hrs) => {
+    if (er) {
+      console.log(er);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+    hrs.sort((a, b) => (a.rating < b.rating) ? 1 : -1);
+
+    if (hrs.length > 5){
+      hrs.splice(5, hrs.length - 1);
+    }
+
+    return res.json({ heroes: hrs });
+  });
+};
+
 module.exports.browsePage = browsePage;
 module.exports.getAccounts = getAccounts;
 module.exports.getAccount = getAccount;
+module.exports.getTop = getTop;

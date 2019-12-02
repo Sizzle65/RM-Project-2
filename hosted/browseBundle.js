@@ -1,13 +1,23 @@
-'use strict';
+"use strict";
+
+var handleVote = function handleVote(e) {
+    e.preventDefault();
+    var accountName = $("#selectedAccount").text();
+
+    sendAjax('PATCH', e.target.act.value, { account: accountName, heroId: e.target.heroId.value }, function (data) {
+        console.log("It works");
+    });
+};
 
 // Grabs all the heroes for the selected account from the server 
 var handleCharacters = function handleCharacters(e) {
     e.preventDefault();
+    var token = e.target._csrf.value;
     sendAjax('GET', '/getAccount', { id: e.target.id.value }, function (data) {
-        $("#selectedAccount").text(data.account.username + "'s Heroes");
+        $("#selectedAccount").text(data.account.username);
 
         // Adds the queried heroes to the screen
-        ReactDOM.render(React.createElement(DotaList, { heroes: data.heroes }), document.querySelector("#dotaCharacters"));
+        ReactDOM.render(React.createElement(DotaList, { heroes: data.heroes, csrf: token }), document.querySelector("#dotaCharacters"));
     });
 };
 
@@ -15,155 +25,192 @@ var handleCharacters = function handleCharacters(e) {
 var DotaList = function DotaList(props) {
     if (props.heroes.length === 0) {
         return React.createElement(
-            'div',
-            { className: 'heroList' },
+            "div",
+            { className: "heroList" },
             React.createElement(
-                'h3',
-                { className: 'emptyHero' },
-                'No Heroes yet'
+                "h3",
+                { className: "emptyHero" },
+                "No Heroes yet"
             )
         );
     }
 
     var heroNodes = props.heroes.map(function (hero) {
         return React.createElement(
-            'div',
-            { key: hero._id, className: 'heroCard', target: hero.primaryAttribute },
+            "div",
+            { className: "outerCard" },
             React.createElement(
-                'h2',
-                { className: 'name' },
-                ' ',
-                hero.name,
-                ' '
+                "form",
+                { className: "voteForm",
+                    id: "voteUp",
+                    name: "voteUp",
+                    onSubmit: handleVote,
+                    action: "/voteUp",
+                    method: "PATCH" },
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { type: "hidden", name: "heroId", value: hero._id }),
+                React.createElement("input", { type: "hidden", name: "act", value: "/voteUp" }),
+                React.createElement("input", { type: "image", src: "/assets/img/thumbUp.png", name: "upvote", className: "up" })
             ),
             React.createElement(
-                'div',
-                { className: 'stats' },
-                React.createElement(
-                    'h3',
-                    { className: 'primAtt' },
-                    ' ',
-                    hero.primaryAttribute,
-                    ' '
-                ),
-                React.createElement(
-                    'h3',
-                    { className: 'stat' },
-                    ' ',
-                    React.createElement('img', { className: 'statIcon', src: '/assets/img/str.png', alt: 'str icon' }),
-                    ' ',
-                    hero.strength,
-                    ' '
-                ),
-                React.createElement(
-                    'h3',
-                    { className: 'stat' },
-                    ' ',
-                    React.createElement('img', { className: 'statIcon', src: '/assets/img/agi.png', alt: 'agi icon' }),
-                    ' ',
-                    hero.agility,
-                    ' '
-                ),
-                React.createElement(
-                    'h3',
-                    { className: 'stat' },
-                    ' ',
-                    React.createElement('img', { className: 'statIcon', src: '/assets/img/int.png', alt: 'int icon' }),
-                    ' ',
-                    hero.intelligence,
-                    ' '
-                ),
-                React.createElement(
-                    'h3',
-                    { className: 'stat' },
-                    ' ',
-                    React.createElement('img', { className: 'statIcon', src: '/assets/img/boot.png', alt: 'boot icon' }),
-                    ' ',
-                    hero.moveSpeed,
-                    ' '
-                ),
-                React.createElement(
-                    'h3',
-                    { className: 'stat' },
-                    ' ',
-                    React.createElement('img', { className: 'statIcon', src: '/assets/img/shield.png', alt: 'shield icon' }),
-                    ' ',
-                    hero.intelligence,
-                    ' '
-                )
+                "label",
+                { className: "rating" },
+                hero.rating
             ),
             React.createElement(
-                'div',
-                { className: 'abilities' },
+                "form",
+                { className: "voteForm",
+                    id: "voteDown",
+                    name: "voteDown",
+                    onSubmit: handleVote,
+                    action: "/voteDown",
+                    method: "PATCH" },
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { type: "hidden", name: "heroId", value: hero._id }),
+                React.createElement("input", { type: "hidden", name: "act", value: "/voteDown" }),
+                React.createElement("input", { type: "image", src: "/assets/img/thumbDown.png", name: "downvote", className: "down" })
+            ),
+            " ",
+            React.createElement("br", null),
+            React.createElement(
+                "div",
+                { key: hero._id, className: "dotaCard", target: hero.primaryAttribute },
                 React.createElement(
-                    'div',
-                    { className: 'spell' },
+                    "h2",
+                    { className: "name" },
+                    " ",
+                    hero.name,
+                    " "
+                ),
+                React.createElement(
+                    "div",
+                    { className: "stats" },
                     React.createElement(
-                        'h3',
-                        { className: 'spellName' },
-                        ' ',
-                        hero.basicName1,
-                        ' '
+                        "h3",
+                        { className: "primAtt" },
+                        " ",
+                        hero.primaryAttribute,
+                        " "
                     ),
                     React.createElement(
-                        'h3',
-                        { className: 'spellDesc' },
-                        ' ',
-                        hero.basicDesc1,
-                        ' '
+                        "h3",
+                        { className: "stat" },
+                        " ",
+                        React.createElement("img", { className: "statIcon", src: "/assets/img/str.png", alt: "str icon" }),
+                        " ",
+                        hero.strength,
+                        " "
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "stat" },
+                        " ",
+                        React.createElement("img", { className: "statIcon", src: "/assets/img/agi.png", alt: "agi icon" }),
+                        " ",
+                        hero.agility,
+                        " "
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "stat" },
+                        " ",
+                        React.createElement("img", { className: "statIcon", src: "/assets/img/int.png", alt: "int icon" }),
+                        " ",
+                        hero.intelligence,
+                        " "
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "stat" },
+                        " ",
+                        React.createElement("img", { className: "statIcon", src: "/assets/img/boot.png", alt: "boot icon" }),
+                        " ",
+                        hero.moveSpeed,
+                        " "
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "stat" },
+                        " ",
+                        React.createElement("img", { className: "statIcon", src: "/assets/img/shield.png", alt: "shield icon" }),
+                        " ",
+                        hero.intelligence,
+                        " "
                     )
                 ),
                 React.createElement(
-                    'div',
-                    { className: 'spell' },
+                    "div",
+                    { className: "abilities" },
                     React.createElement(
-                        'h3',
-                        { className: 'spellName' },
-                        ' ',
-                        hero.basicName2,
-                        ' '
+                        "div",
+                        { className: "spell" },
+                        React.createElement(
+                            "h3",
+                            { className: "spellName" },
+                            " ",
+                            hero.basicName1,
+                            " "
+                        ),
+                        React.createElement(
+                            "h3",
+                            { className: "spellDesc" },
+                            " ",
+                            hero.basicDesc1,
+                            " "
+                        )
                     ),
                     React.createElement(
-                        'h3',
-                        { className: 'spellDesc' },
-                        ' ',
-                        hero.basicDesc2,
-                        ' '
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { className: 'spell' },
-                    React.createElement(
-                        'h3',
-                        { className: 'spellName' },
-                        hero.basicName3,
-                        ' '
+                        "div",
+                        { className: "spell" },
+                        React.createElement(
+                            "h3",
+                            { className: "spellName" },
+                            " ",
+                            hero.basicName2,
+                            " "
+                        ),
+                        React.createElement(
+                            "h3",
+                            { className: "spellDesc" },
+                            " ",
+                            hero.basicDesc2,
+                            " "
+                        )
                     ),
                     React.createElement(
-                        'h3',
-                        { className: 'spellDesc' },
-                        ' ',
-                        hero.basicDesc3,
-                        ' '
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { className: 'spell' },
-                    React.createElement(
-                        'h3',
-                        { className: 'spellName' },
-                        ' ',
-                        hero.ultimateName,
-                        ' '
+                        "div",
+                        { className: "spell" },
+                        React.createElement(
+                            "h3",
+                            { className: "spellName" },
+                            hero.basicName3,
+                            " "
+                        ),
+                        React.createElement(
+                            "h3",
+                            { className: "spellDesc" },
+                            " ",
+                            hero.basicDesc3,
+                            " "
+                        )
                     ),
                     React.createElement(
-                        'h3',
-                        { className: 'spellDesc' },
-                        ' ',
-                        hero.ultimateDesc,
-                        ' '
+                        "div",
+                        { className: "spell" },
+                        React.createElement(
+                            "h3",
+                            { className: "spellName" },
+                            " ",
+                            hero.ultimateName,
+                            " "
+                        ),
+                        React.createElement(
+                            "h3",
+                            { className: "spellDesc" },
+                            " ",
+                            hero.ultimateDesc,
+                            " "
+                        )
                     )
                 )
             )
@@ -171,8 +218,8 @@ var DotaList = function DotaList(props) {
     });
 
     return React.createElement(
-        'div',
-        { className: 'heroList' },
+        "div",
+        { className: "heroList" },
         heroNodes
     );
 };
@@ -181,12 +228,12 @@ var DotaList = function DotaList(props) {
 var AccountList = function AccountList(props) {
     if (props.accounts.length === 0) {
         return React.createElement(
-            'div',
-            { className: 'accountList' },
+            "div",
+            { className: "accountList" },
             React.createElement(
-                'h3',
-                { className: 'emptyAccounts' },
-                'No Accounts yet'
+                "h3",
+                { className: "emptyAccounts" },
+                "No Accounts yet"
             )
         );
     }
@@ -194,26 +241,26 @@ var AccountList = function AccountList(props) {
     var accountNodes = props.accounts.map(function (account) {
         var action = '/getAccount?' + account._id;
         return React.createElement(
-            'div',
-            { key: account._id, className: 'accountCard' },
+            "div",
+            { key: account._id, className: "accountCard" },
             React.createElement(
-                'form',
-                { id: 'accountForm',
-                    name: 'accountForm',
+                "form",
+                { id: "accountForm",
+                    name: "accountForm",
                     onSubmit: handleCharacters,
                     action: action,
-                    method: 'GET',
-                    className: 'accountForm' },
-                React.createElement('input', { type: 'hidden', name: '_csrf', value: props.csrf }),
-                React.createElement('input', { type: 'hidden', name: 'id', value: account._id }),
-                React.createElement('input', { type: 'submit', value: account.username, id: 'submitAccount' })
+                    method: "GET",
+                    className: "accountForm" },
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { type: "hidden", name: "id", value: account._id }),
+                React.createElement("input", { type: "submit", value: account.username, id: "submitAccount" })
             )
         );
     });
 
     return React.createElement(
-        'div',
-        { className: 'accountList' },
+        "div",
+        { className: "accountList" },
         accountNodes
     );
 };
@@ -225,8 +272,16 @@ var loadAccountsFromServer = function loadAccountsFromServer(csrf) {
     });
 };
 
+// Grabs top heroes across all accounts
+var loadHeroesFromServer = function loadHeroesFromServer(csrf) {
+    sendAjax('GET', '/getTop', null, function (data) {
+        ReactDOM.render(React.createElement(DotaList, { heroes: data.heroes, csrf: csrf }), document.querySelector("#topHeroes"));
+    });
+};
+
 var setup = function setup(csrf) {
     loadAccountsFromServer(csrf);
+    loadHeroesFromServer(csrf);
 };
 
 var getToken = function getToken() {

@@ -1,6 +1,7 @@
 const handlePass = (e) => {
     e.preventDefault();
 
+    // Checks for proper value input
     if ($("#pass").val() == '' || $("#pass2").val() == ''){
         handleError("All fields are required");
         return false;

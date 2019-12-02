@@ -119,6 +119,16 @@ nav:nth-child(1) {
     background-color:#1087bf;
 }
 
+.dotaCard[target=Strength]{
+    background-color:#ac3011;
+}
+.dotaCard[target=Agility]{
+    background-color:#38ab36;
+}
+.dotaCard[target=Intelligence]{
+    background-color:#1087bf;
+}
+
 .stat {
     display:inline-block;
     margin:10px;
@@ -162,12 +172,6 @@ nav:nth-child(1) {
     height:120px;
     margin-bottom:10px;
     margin-top:10px;
-}
-
-#dotaCharacters {
-    background-color:black;
-    color:black;
-    margin:5px;
 }
 
 .spell {
@@ -253,6 +257,83 @@ nav:nth-child(1) {
     width: 200px;
     height: 200px;
     margin: 10px;
+}
+
+#dotaCharacters {
+    color:black;
+    display: inline-table;
+    text-align:center;
+    margin:5px;
+    height:100%;
+    width:100%;
+}
+
+#topHeroes {
+    color:black;
+    display: inline-table;
+    text-align:center;
+    margin:5px;
+    height:100%;
+    width:100%;
+}
+
+.card {
+    display: inline-block;
+    margin:2px;
+    padding:2px;
+}
+
+.dotaCard {
+    background-color:rgb(110, 41, 41);
+    color:rgb(211, 211, 211);
+    display: inline-block;
+    text-align: center;
+    width: 600px;
+    height: 300px;
+    margin: 20px;
+    vertical-align: top;
+    transition: height 0.2s ease;
+    overflow: hidden;
+}
+.dotaCard:hover {
+    height:100%;
+}
+.dotaCard .abilities {
+    visibility: hidden;
+    opacity: 0%;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.dotaCard:hover .abilities {
+    visibility: visible;
+    opacity: 100%;
+}
+
+.spellDesc {
+    color:black;
+}
+
+.delete {
+    width:40px;
+    height:40px;
+    color:rgb(211, 211, 211);
+    transition: width 0.1s ease, height 0.1s ease;
+    box-shadow:3px 3px black;
+    margin-bottom:-30px;
+}
+
+.delete[target=Strength]{
+    background-color:#ac3011;
+}
+.delete[target=Agility]{
+    background-color:#38ab36;
+}
+.delete[target=Intelligence]{
+    background-color:#1087bf;
+}
+
+.delete:hover {
+    width:45px;
+    height:45px;
 }
 
 .pageSubtitle {
@@ -374,4 +455,27 @@ nav:nth-child(1) {
 #passSuccess {
     text-align:center;
     font-size:20px;
+}
+
+.up, .down {
+    height:50px;
+    width:50px;
+}
+
+.voteForm {
+    display:inline-block;
+}
+
+.outerCard {
+    display:inline-block;
+}
+
+#accounts {
+    text-align: center;
+}
+
+.rating {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 50px;
 }

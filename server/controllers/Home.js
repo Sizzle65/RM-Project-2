@@ -20,5 +20,20 @@ const getHeroes = (request, response) => {
   });
 };
 
+const deleteHero = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Dota.DotaModel.findByOwner(req.session.account._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+    console.log("here");
+    return res.json({ heroes: docs });
+  });
+};
+
 module.exports.homePage = homePage;
 module.exports.getHeroes = getHeroes;
+module.exports.deleteHero = deleteHero;
