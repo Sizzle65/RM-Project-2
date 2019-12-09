@@ -14,7 +14,7 @@ const router = (app) => {
   app.patch('/voteDown', mid.requiresLogin, controllers.Account.downvote);
   app.get('/home', mid.requiresLogin, controllers.Home.homePage);
   app.get('/getHeroes', mid.requiresLogin, controllers.Home.getHeroes);
-  app.get('/deleteHero', mid.requiresLogin, controllers.Home.deleteHero);
+  app.delete('/deleteHero', mid.requiresLogin, controllers.Home.deleteHero);
   app.get('/create', mid.requiresLogin, controllers.Create.createPage);
   app.post('/createDotaCharacter', mid.requiresLogin, controllers.Create.createDotaCharacter);
   app.get('/browse', mid.requiresLogin, controllers.Browse.browsePage);

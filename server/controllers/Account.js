@@ -1,6 +1,7 @@
 const models = require('../models');
 
 const Account = models.Account;
+const Dota = models.Dota;
 
 // Directs to login page
 const loginPage = (req, res) => {
@@ -142,16 +143,33 @@ const upvote = (request, response) => {
   const req = request;
   const res = response;
 
-  console.log(req.account);
-  Account.AccountModel.findOne({ username: req.account }, (er, acc) => {
+  Account.AccountModel.findOne({ username: req.body.account }, (er, acc) => {
     if (er) {
       console.log(er);
       return res.status(400).json({ error: 'An error occurred' });
     }
 
-    console.log(acc);
+    return Dota.DotaModel.findByOwner(acc._id, (err, heroes) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).json({ error: 'An error occurred' });
+      }
 
-    return res.status(200).json({ message: 'Success' });
+      const hero = heroes.filter((obj) => obj._doc.name === req.body.name)[0];
+      const updatedRating = ++hero._doc.rating;
+
+      Dota.DotaModel.findOneAndUpdate({ _id: hero._doc._id },
+      { rating: updatedRating },
+      (error) => {
+        if (error) {
+          console.log(error);
+          return res.status(400).json({ error: 'An error occurred' });
+        }
+
+        return res.status(200).json({ rating: updatedRating });
+      });
+      return res.status(200).json({ message: 'Success' });
+    });
   });
 };
 
@@ -159,17 +177,33 @@ const downvote = (request, response) => {
   const req = request;
   const res = response;
 
-  console.log(req.account);
-
-  Account.AccountModel.findOne({ username: req.account }, (er, acc) => {
+  Account.AccountModel.findOne({ username: req.body.account }, (er, acc) => {
     if (er) {
       console.log(er);
       return res.status(400).json({ error: 'An error occurred' });
     }
 
-    console.log(acc);
+    return Dota.DotaModel.findByOwner(acc._id, (err, heroes) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).json({ error: 'An error occurred' });
+      }
 
-    return res.status(200).json({ message: 'Success' });
+      const hero = heroes.filter((obj) => obj._doc.name === req.body.name)[0];
+      const updatedRating = --hero._doc.rating;
+
+      Dota.DotaModel.findOneAndUpdate({ _id: hero._doc._id },
+      { rating: updatedRating },
+      (error) => {
+        if (error) {
+          console.log(error);
+          return res.status(400).json({ error: 'An error occurred' });
+        }
+
+        return res.status(200).json({ rating: updatedRating });
+      });
+      return res.status(200).json({ message: 'Success' });
+    });
   });
 };
 

@@ -35,17 +35,19 @@ const getAccount = (request, response) => {
         console.log(er);
         return res.status(400).json({ error: 'An error occurred' });
       }
+      const strHeroes = docs.filter((obj) => obj._doc.primaryAttribute === 'Strength');
+      const intHeroes = docs.filter((obj) => obj._doc.primaryAttribute === 'Intelligence');
+      const agiHeroes = docs.filter((obj) => obj._doc.primaryAttribute === 'Agility');
 
-      return res.json({ account: acc, heroes: docs });
+      return res.json({
+        account: acc, strength: strHeroes, intelligence: intHeroes, agility: agiHeroes,
+      });
     });
   });
 };
 
 const getTop = (request, response) => {
-  const req = request;
   const res = response;
-
-  console.log(req);
 
   return Dota.DotaModel.find({}, (er, hrs) => {
     if (er) {

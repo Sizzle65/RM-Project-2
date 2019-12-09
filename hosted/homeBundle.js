@@ -3,9 +3,9 @@
 var handleDelete = function handleDelete(e) {
     e.preventDefault();
 
-    sendAjax('DELETE', '/deleteHero', { id: e.target.heroId.value }, function (data) {
+    sendAjax('DELETE', '/deleteHero', { name: e.target.name.value, _csrf: e.target._csrf.value }, function () {
         sendAjax('GET', '/getToken', null, function (result) {
-            ReactDOM.render(React.createElement(DotaList, { heroes: data.heroes, csrf: result.csrfToken }), document.querySelector("#dotaCharacters"));
+            loadHeroesFromServer(result.csrfToken);
         });
     });
 };
@@ -37,7 +37,7 @@ var DotaList = function DotaList(props) {
                     action: '/deleteHero',
                     method: 'DELETE' },
                 React.createElement('input', { type: 'hidden', name: '_csrf', value: props.csrf }),
-                React.createElement('input', { type: 'hidden', name: 'heroId', value: hero._id }),
+                React.createElement('input', { type: 'hidden', name: 'name', value: hero.name }),
                 React.createElement('input', { type: 'image', src: '/assets/img/delete.png', name: 'upvote', className: 'delete', target: hero.primaryAttribute, title: 'Delete Character' })
             ),
             React.createElement(
@@ -195,7 +195,9 @@ var DotaList = function DotaList(props) {
 // Grabs all the heroes from the server that are tied to the currect account
 var loadHeroesFromServer = function loadHeroesFromServer(csrf) {
     sendAjax('GET', '/getHeroes', null, function (data) {
-        ReactDOM.render(React.createElement(DotaList, { heroes: data.heroes, csrf: csrf }), document.querySelector("#dotaCharacters"));
+        ReactDOM.render(React.createElement(DotaList, { heroes: data.strength, csrf: csrf }), document.querySelector("#strengthHeroes"));
+        ReactDOM.render(React.createElement(DotaList, { heroes: data.agility, csrf: csrf }), document.querySelector("#agilityHeroes"));
+        ReactDOM.render(React.createElement(DotaList, { heroes: data.intelligence, csrf: csrf }), document.querySelector("#intelligenceHeroes"));
     });
 };
 

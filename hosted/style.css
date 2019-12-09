@@ -237,6 +237,7 @@ nav:nth-child(1) {
     margin:25px;
     text-align: center;
     font-size: 40px;
+    margin-bottom:50px;
 }
 
 #submitAccount {
@@ -281,7 +282,15 @@ nav:nth-child(1) {
     display: inline-block;
     margin:2px;
     padding:2px;
+    margin-top:15px;
+    margin-bottom:15px;
 }
+
+#strengthHeroes, #agilityHeroes, #intelligenceHeroes {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 
 .dotaCard {
     background-color:rgb(110, 41, 41);
@@ -321,14 +330,28 @@ nav:nth-child(1) {
     margin-bottom:-30px;
 }
 
-.delete[target=Strength]{
+.delete[target=Strength], .heroLabel[target=Strength], .voting[target=Strength]{
     background-color:#ac3011;
 }
-.delete[target=Agility]{
+.delete[target=Agility], .heroLabel[target=Agility], .voting[target=Agility]{
     background-color:#38ab36;
 }
-.delete[target=Intelligence]{
+.delete[target=Intelligence], .heroLabel[target=Intelligence], .voting[target=Intelligence]{
     background-color:#1087bf;
+}
+
+.heroLabel {
+    font-size: 50px;
+    color:rgb(211, 211, 211);
+    box-shadow: 3px 3px black;
+    padding: 10px;
+}
+
+.voting {
+    padding-top:10px;
+    margin-left:200px;
+    margin-right:200px;
+    margin-bottom:-20px;
 }
 
 .delete:hover {
@@ -444,7 +467,7 @@ nav:nth-child(1) {
     border-radius: 2px;
     border-color: rgb(110, 41, 41);
     padding: 3px 0px;
-    color: rgb(211, 211, 211);;
+    color: rgb(211, 211, 211);
     text-decoration: none;
 }
 
@@ -478,4 +501,5 @@ nav:nth-child(1) {
     margin-left: 20px;
     margin-right: 20px;
     font-size: 50px;
+    color: rgb(211, 211, 211);
 }

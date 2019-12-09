@@ -1,11 +1,9 @@
 const handleDelete = (e) => {
     e.preventDefault();
 
-    sendAjax('DELETE', '/deleteHero', { id : e.target.heroId.value } , (data) => {
+    sendAjax('DELETE', '/deleteHero', { name : e.target.name.value, _csrf: e.target._csrf.value } , () => {
         sendAjax('GET', '/getToken', null, (result) => {
-            ReactDOM.render(
-                <DotaList heroes={data.heroes} csrf={result.csrfToken} />, document.querySelector("#dotaCharacters")
-            );
+            loadHeroesFromServer(result.csrfToken);
         });
     });
 }
@@ -30,7 +28,7 @@ const DotaList = (props) => {
                     action="/deleteHero"
                     method="DELETE">
                     <input type="hidden" name="_csrf" value={props.csrf}/>   
-                    <input type="hidden" name="heroId" value={hero._id} /> 
+                    <input type="hidden" name="name" value={hero.name} /> 
                     <input type="image" src="/assets/img/delete.png" name="upvote" className="delete" target={hero.primaryAttribute} title="Delete Character" />
                 </form>
                 <div key={hero._id} className="dotaCard" target={hero.primaryAttribute}>
@@ -80,7 +78,13 @@ const DotaList = (props) => {
 const loadHeroesFromServer = (csrf) => {
     sendAjax('GET', '/getHeroes', null, (data) => {
         ReactDOM.render(
-            <DotaList heroes={data.heroes} csrf={csrf} />, document.querySelector("#dotaCharacters")
+            <DotaList heroes={data.strength} csrf={csrf} />, document.querySelector("#strengthHeroes")
+        );
+        ReactDOM.render(
+            <DotaList heroes={data.agility} csrf={csrf} />, document.querySelector("#agilityHeroes")
+        );
+        ReactDOM.render(
+            <DotaList heroes={data.intelligence} csrf={csrf} />, document.querySelector("#intelligenceHeroes")
         );
     });
 };

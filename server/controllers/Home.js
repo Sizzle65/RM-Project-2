@@ -16,7 +16,11 @@ const getHeroes = (request, response) => {
       return res.status(400).json({ error: 'An error occurred' });
     }
 
-    return res.json({ heroes: docs });
+    const strHeroes = docs.filter((obj) => obj._doc.primaryAttribute === 'Strength');
+    const intHeroes = docs.filter((obj) => obj._doc.primaryAttribute === 'Intelligence');
+    const agiHeroes = docs.filter((obj) => obj._doc.primaryAttribute === 'Agility');
+
+    return res.json({ strength: strHeroes, intelligence: intHeroes, agility: agiHeroes });
   });
 };
 
@@ -24,13 +28,23 @@ const deleteHero = (request, response) => {
   const req = request;
   const res = response;
 
-  return Dota.DotaModel.findByOwner(req.session.account._id, (err, docs) => {
+  return Dota.DotaModel.findByOwner(req.session.account._id, (err, heroes) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
     }
-    console.log('here');
-    return res.json({ heroes: docs });
+
+    const hero = heroes.filter((obj) => obj._doc.name === req.body.name)[0];
+
+    Dota.DotaModel.deleteOne({ _id: hero._doc._id }, (error) => {
+      if (error) {
+        console.log(error);
+        return res.status(400).json({ error: 'An error occurred' });
+      }
+
+      return res.status(200).json({ message: 'Success' });
+    });
+    return res.status(200).json({ message: 'Success' });
   });
 };
 
