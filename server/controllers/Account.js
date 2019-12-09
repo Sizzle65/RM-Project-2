@@ -134,7 +134,7 @@ const changePass = (request, response) => {
 
            return res.status(400).json({ error: 'An error ocurred' });
          });
-         return res.status(200).json({ message: 'Success' });
+         return res.status(200);
        }));
     });
 };
@@ -168,7 +168,7 @@ const upvote = (request, response) => {
 
         return res.status(200).json({ rating: updatedRating });
       });
-      return res.status(200).json({ message: 'Success' });
+      return res.status(200);
     });
   });
 };
@@ -202,7 +202,7 @@ const downvote = (request, response) => {
 
         return res.status(200).json({ rating: updatedRating });
       });
-      return res.status(200).json({ message: 'Success' });
+      return res.status(200);
     });
   });
 };

@@ -44,7 +44,7 @@ const deleteHero = (request, response) => {
 
       return res.status(200).json({ message: 'Success' });
     });
-    return res.status(200).json({ message: 'Success' });
+    return res.status(200);
   });
 };
 
